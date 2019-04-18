@@ -33,35 +33,33 @@ object WebServer {
         get {
           path("listedonors" / LongNumber) { id =>
             // there might be no item for a given id
-            val maybeItem: Option[Item] = fetchItembById(id)
-            maybeItem match {
-              case Some(item) => complete(item)
-              case None => complete(StatusCodes.NotFound)
-            }
+            val maybeItem: List[String] = listOfDonators()
+            complete(maybeItem)
           }
         } ~
         post {
           path("makeTip") {
-
+            parameters('id.as[String],  'amount.as[Int]) {(id, amount) =>
+              tips = tip(id, amount)
+              complete("Tip bien reçu.")
+            }
           }
         } ~
         post {
-          path("cancelTip" / LongNumber) { id =>
-            val deletion = Option[Tip] = deleteTip(id)
-            deletion match {
-              case Some(tip) => complete(tip)
-              case None => complete(StatusCode.NotFound)
-            }
+          path("cancelTip" / IntNumber) { id =>
+            deleteTip(id)
+            complete("Tip annulé!")
           }
         }~
         get {
           path("sumAllTips") {
-            complete(tipSum())
+            val sum: Double = tipSum()
           }
         }~
         get {
-          path("getAllTipsByUser" / LongNumber) {
-
+          path("getAllTipsByUser" / Segment) { id =>
+            val tip: Double = getTipByUser(id)
+            complete(tip.toString)
           }
         }
       }~
@@ -76,30 +74,45 @@ object WebServer {
     }~
     pathPrefix("giveaways") {
       post {
-        path("createGiveAway" / LongNumber) {
-
+        path("createGiveAway" ) {
+          complete("createGiveAway")
         }
       }~
       post {
-        path ("RegisterToGiveAway" / LongNumber) {
-
+        path ("RegisterToGiveAway" ) {
+          complete("RegisterToGiveAway")
         }
       }~
       get {
         path("getWinner") {
-
+          complete("getWinner")
         }
       }
     }~
     pathPrefix("survey") {
-      post("createSurvey" / Survey) {
-
+      post {
+        path("createSurvey") {
+          parameter('question.as[String],  'option1.as[String], 'option2.as[String]) { (question, option1, option2) =>
+            newSurvey(question, option1, option2)
+            complete("Sondage créé !")
+          }
+        }
       }~
-      post ("doSurvey") {
+      post {
+        path("doSurvey") {
+          parameter('id_user.as[Int], 'id_survey.as[Int]) { (user, id) =>
+            participateToSurvey(user, id)
+            complete("Participation prise en compte !")
+          }
+        }
+      }
+      get {
+        path("getSurveyResult" / IntNumber) { id =>
+          val result: Any = participateToSurvey(id)
+        }
+        //val result
 
-      }~
-      get("getSurveyResult" / LongNumber) {
-
+        complete("getSurveyResult")
       }
     }~
     get {
