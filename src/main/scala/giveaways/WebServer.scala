@@ -54,40 +54,47 @@ object WebServer {
         get {
           path("sumAllTips") {
             val sum: Double = tipSum()
+            complete(sum.toString())
           }
         }~
         get {
-          path("getAllTipsByUser" / Segment) { id =>
+          path("getAllTipsByUser" / IntNumber) { id =>
             val tip: Double = getTipByUser(id)
             complete(tip.toString)
           }
         }
       }~
-    pathPrefix("sub"/ LongNumber){ id =>
-      // there might be no item for a given id
-      val maybeItem: Option[Item] = fetchItembById(id)
-      maybeItem match {
-        case Some(item) => complete(item)
-        case None
-        => complete(StatusCodes.NotFound)
-      }
+    pathPrefix("sub"){
+      val subs : List[String] = getSubs()
+      complete(subs)
     }~
     pathPrefix("giveaways") {
       post {
         path("createGiveAway" ) {
-          complete("createGiveAway")
+          parameter('id.as[Int], 'event.as[String], 'cashPrize.as[Double]) {(id, event, cashPrize) =>
+            newGiveaway(id, event, cashPrize)
+            complete("Donation créée !")
+          }
         }
       }~
       post {
         path ("RegisterToGiveAway" ) {
-          complete("RegisterToGiveAway")
+          parameter('id.as[Int], 'ga_id.as[Int]) {(id, ga_id) =>
+            subToGiveaway(id, ga_id)
+            complete("Bien inscrit a la donation !")
+          }
         }
       }~
       get {
-        path("getWinner") {
-          complete("getWinner")
+        path("getWinner" / IntNumber) { id =>
+          val win: User = getWinner(id)
+          complete("Le vainqueur est :" + win.name)
         }
       }
+    }~
+    pathPrefix("blacklist" / IntNumber) { id =>
+      blockUser(id)
+      complete("L'utilisateur " + id.toString() + " a bien été ban !")
     }~
     pathPrefix("survey") {
       post {
