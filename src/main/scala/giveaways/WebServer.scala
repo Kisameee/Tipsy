@@ -8,9 +8,9 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
+import giveaways.FakeData._
 import spray.json.DefaultJsonProtocol._
 
-import scala.concurrent.Future
 import scala.io.StdIn
 
 object WebServer {
@@ -18,34 +18,11 @@ object WebServer {
   // needed to run the route
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
-  // needed for the future map/flatmap in the end and future in fetchItem and saveOrder
   implicit val executionContext = system.dispatcher
-
-  var orders: List[Item] = Nil
-
-  // domain model
-  final case class Item(name: String, id: Long)
-
-  final case class Order(items: List[Item])
 
   // formats for unmarshalling and marshalling
   implicit val itemFormat = jsonFormat2(Item)
   implicit val orderFormat = jsonFormat1(Order)
-
-  // (fake) async database query api
-  def fetchItem(itemId: Long): Future[Option[Item]] = Future {
-    orders.find(o => o.id == itemId)
-  }
-
-  def saveOrder(order: Order): Future[Done] = {
-    orders = order match {
-      case Order(items) => items ::: orders
-      case _ => orders
-    }
-    Future {
-      Done
-    }
-  }
 
   def main(args: Array[String]) {
 
@@ -53,20 +30,21 @@ object WebServer {
       get {
         pathPrefix("item" / LongNumber) { id =>
           // there might be no item for a given id
-          val maybeItem: Future[Option[Item]] = fetchItem(id)
-
-          onSuccess(maybeItem) {
+          val maybeItem: Option[Item] = fetchItem(id)
+          maybeItem match {
             case Some(item) => complete(item)
-            case None => complete(StatusCodes.NotFound)
+            case None
+            => complete(StatusCodes.NotFound)
           }
         }
       } ~
         post {
           path("create-order") {
             entity(as[Order]) { order =>
-              val saved: Future[Done] = saveOrder(order)
-              onComplete(saved) { done =>
-                complete("order created")
+              val saved: Done = saveOrder(order)
+              saved match {
+                case Done => complete("order created")
+                case _ => complete(StatusCodes.NotFound)
               }
             }
           }
