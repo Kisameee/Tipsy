@@ -115,8 +115,8 @@ object WebServer {
       }
       get {
         path("getSurveyResult" / IntNumber) { id =>
-          val result: Any = participateToSurvey(id)
-          complete("")
+          val result: Any = getSurveyResult(id)
+          complete(result)
         }
         //val result
 
