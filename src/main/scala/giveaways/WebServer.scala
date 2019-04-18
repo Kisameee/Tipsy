@@ -10,19 +10,21 @@ import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import giveaways.FakeData._
 import spray.json.DefaultJsonProtocol._
+import spray.json.RootJsonFormat
 
+import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
 object WebServer {
 
   // needed to run the route
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
-  implicit val executionContext = system.dispatcher
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   // formats for unmarshalling and marshalling
-  implicit val itemFormat = jsonFormat2(Item)
-  implicit val orderFormat = jsonFormat1(Order)
+  implicit val itemFormat: RootJsonFormat[Item] = jsonFormat3(Item)
+  implicit val orderFormat: RootJsonFormat[Order] = jsonFormat1(Order)
 
   def main(args: Array[String]) {
 
@@ -36,6 +38,10 @@ object WebServer {
             case None
             => complete(StatusCodes.NotFound)
           }
+        }
+
+        pathPrefix("item"/ LongNumber){
+
         }
       } ~
         post {
