@@ -116,34 +116,13 @@ object WebServer {
       get {
         path("getSurveyResult" / IntNumber) { id =>
           val result: Any = participateToSurvey(id)
+          complete("")
         }
         //val result
 
         complete("getSurveyResult")
       }
-    }~
-    get {
-      pathPrefix("item" / LongNumber) { id =>
-        // there might be no item for a given id
-        val maybeItem: Option[Item] = fetchItembById(id)
-        maybeItem match {
-          case Some(item) => complete(item)
-          case None
-          => complete(StatusCodes.NotFound)
-        }
-      }
-    } ~
-      post {
-        path("create-order") {
-          entity(as[Order]) { order =>
-            val saved: Done = saveOrder(order)
-            saved match {
-              case Done => complete("order created")
-              case _ => complete(StatusCodes.NotFound)
-            }
-          }
-        }
-      }
+    }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
