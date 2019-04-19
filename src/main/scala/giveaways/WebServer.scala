@@ -39,28 +39,32 @@ object WebServer {
               case None => complete(StatusCodes.NotFound)
             }
           }
-        }
+        } ~
         post {
           path("makeTip") {
 
           }
-        }
+        } ~
         post {
-          path("cancelTip") {
-
+          path("cancelTip" / LongNumber) { id =>
+            val deletion = Option[Tip] = deleteTip(id)
+            deletion match {
+              case Some(tip) => complete(tip)
+              case None => complete(StatusCode.NotFound)
+            }
           }
-        }
+        }~
         get {
           path("sumAllTips") {
-
+            complete(tipSum())
           }
-        }
+        }~
         get {
           path("getAllTipsByUser" / LongNumber) {
 
           }
         }
-      }
+      }~
     pathPrefix("sub"/ LongNumber){ id =>
       // there might be no item for a given id
       val maybeItem: Option[Item] = fetchItembById(id)
@@ -69,35 +73,35 @@ object WebServer {
         case None
         => complete(StatusCodes.NotFound)
       }
-    }
+    }~
     pathPrefix("giveaways") {
       post {
         path("createGiveAway" / LongNumber) {
 
         }
-      }
+      }~
       post {
         path ("RegisterToGiveAway" / LongNumber) {
 
         }
-      }
+      }~
       get {
         path("getWinner") {
 
         }
       }
-    }
+    }~
     pathPrefix("survey") {
       post("createSurvey" / Survey) {
 
-      }
+      }~
       post ("doSurvey") {
 
-      }
+      }~
       get("getSurveyResult" / LongNumber) {
 
       }
-    }
+    }~
     get {
       pathPrefix("item" / LongNumber) { id =>
         // there might be no item for a given id
