@@ -93,8 +93,8 @@ object FakeData {
     tips.filter(_.id == id).map(_.amount).sum
   }
 
-  def listOfDonators(name: String, id: Int): String = {
-    tips.map(_.name).distinct(id)
+  def listOfDonators(): List[String] = {
+    tips.map(_.name).distinct
   }
 
   def totalTips(): Double = {
@@ -142,7 +142,7 @@ object FakeData {
 
 
   /** **********************Users *******************/
-  def blockUser(blocked: Boolean): Any = {
+  def blockUser(blocked: Int): Any = {
     users.filter(_.blocked == true)
   }
 
