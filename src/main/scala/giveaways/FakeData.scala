@@ -109,7 +109,7 @@ object FakeData {
 
   /** *****************GiveAways ********************/
 
-  def newGiveaway(id: Int, event: String, cashPrize: Double, participants: List[User]): List[GiveAway] = {
+  def newGiveaway(id: Int, event: String, cashPrize: Double, participants: List[User] = List[User]()): List[GiveAway] = {
     giveaways :+ GiveAway(id, event, cashPrize, participants)
   }
 
@@ -117,13 +117,16 @@ object FakeData {
     giveaways = giveaways.filter(_.id != id)
   }
 
-  private def subToGiveaway(id: Int, user: User) = {
+  private def subToGiveaway(id: Int, userId: Int) = {
     giveaways.find(_.id == id) match {
       case Some(g) =>
         val ga = g
-        val l = g.participants ++ List(user)
-        removeGiveaway(g.id)
-        giveaways = newGiveaway(ga.id, ga.event, ga.amount, l)
+        users.find(_.id == userId) match {
+          case Some(uu) => val l = g.participants ++ List()
+            giveaways = newGiveaway(ga.id, ga.event, ga.amount, l)
+            giveaways
+          case _ => giveaways
+        }
       case _ => giveaways
     }
   }
