@@ -20,7 +20,7 @@ A scala project with akka http rest api to manage tips subs and survey for a gam
 Download the source code, add it to sbt project.
 compile and then run the project on the sbt shell
 
-##Rest Api available queries
+## Rest Api available queries
 
 #### Tips 
 
