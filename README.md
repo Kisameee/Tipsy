@@ -24,27 +24,27 @@ compile and then run the project on the sbt shell
 
 #### Tips 
 
-######http://localhost:8080/tips/sumAllTips.
-######http://localhost:8080/tips/listedonors(*UserId*)
-######http://localhost:8080/tips/makeTip(*id, amount*)
-######http://localhost:8080/tips/cancelTip(*id*))
-######http://localhost:8080/tips/getAllTipsByUser(*id*)
+http://localhost:8080/tips/sumAllTips  
+http://localhost:8080/tips/listedonors(*UserId*)  
+http://localhost:8080/tips/makeTip(*id, amount*)  
+http://localhost:8080/tips/cancelTip(*id*))  
+http://localhost:8080/tips/getAllTipsByUser(*id*)  
 
 #### Subs
 
-######http://localhost:8080/sub
-######http://localhost:8080/blacklist
+http://localhost:8080/sub  
+http://localhost:8080/blacklist  
 
 
 #### Giveaways
 
-######http://localhost:8080/giveaways/createGiveAway
-######http://localhost:8080/giveaways/RegisterToGiveAway
-######http://localhost:8080/giveaways/getWinner(*id*)
+http://localhost:8080/giveaways/createGiveAway  
+http://localhost:8080/giveaways/RegisterToGiveAway  
+http://localhost:8080/giveaways/getWinner(*id*)  
 
 #### Survey
 
-######http://localhost:8080/survey/createSurvey
-######http://localhost:8080/survey/doSurvey
-######http://localhost:8080/survey/getSurveyResult
+http://localhost:8080/survey/createSurvey  
+http://localhost:8080/survey/doSurvey  
+http://localhost:8080/survey/getSurveyResult  
 
