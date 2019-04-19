@@ -85,8 +85,8 @@ object FakeData {
     tips = tips.filter(_.id != id)
   }
 
-  def tipSum(): Option[Double] = {
-    Some(tips.map(_.amount).sum)
+  def tipSum(): Double = {
+    tips.map(_.amount).sum
   }
 
   def getTipByUser(id: Int): Double = {
@@ -97,8 +97,8 @@ object FakeData {
     tips.map(_.name).distinct
   }
 
-  def totalTips(): Option[Double] = {
-    Some(tips.map(_.amount).sum)
+  def totalTips(): Double = {
+    tips.map(_.amount).sum
   }
 
   /** *********************SUBS *********************/
