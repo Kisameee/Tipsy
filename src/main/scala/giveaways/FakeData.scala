@@ -1,7 +1,5 @@
 package giveaways
 
-import akka.Done
-
 object FakeData {
 
   final case class Item(name: String, id: Long, amount: Double)
@@ -77,7 +75,7 @@ object FakeData {
   /** ******************Tips ******************/
 
   def tip(name: String, amount: Double): List[Tip] = {
-    if (users.exists(_.name == name))
+    if (users.contains(name))
       tips :+ Tip(tips.length + 1, name, amount)
     else
       tips
@@ -91,8 +89,8 @@ object FakeData {
     Some(tips.map(_.amount).sum)
   }
 
-  def getTipByUser(name: String): Double = {
-    tips.filter(_.name == name).map(_.amount).sum
+  def getTipByUser(id: Int): Double = {
+    tips.filter(_.id == id).map(_.amount).sum
   }
 
   def listOfDonators(): List[String] = {
@@ -138,7 +136,6 @@ object FakeData {
 
 
   /** *********************Orders *****************/
-
 
 
   /** **********************Users *******************/
