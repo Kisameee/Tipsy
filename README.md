@@ -1,7 +1,7 @@
 # Tipsy  :
 A scala project with akka http rest api to manage tips subs and survey for a gamer
 
-###Requires :
+### Requires :
 
 ##### name := "sbt"
 
