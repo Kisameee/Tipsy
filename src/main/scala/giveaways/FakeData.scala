@@ -117,7 +117,7 @@ object FakeData {
     giveaways = giveaways.filter(_.id != id)
   }
 
-  private def subToGiveaway(id: Int, userId: Int) = {
+  def subToGiveaway(id: Int, userId: Int) = {
     giveaways.find(_.id == id) match {
       case Some(g) =>
         val ga = g
@@ -142,8 +142,8 @@ object FakeData {
 
 
   /** **********************Users *******************/
-  def blockUser(id: Int): Unit = {
-    users.filter(_.id == id)
+  def blockUser(blocked: Boolean): Any = {
+    users.filter(_.blocked == true)
   }
 
   /** ********************Surveys ******************/
