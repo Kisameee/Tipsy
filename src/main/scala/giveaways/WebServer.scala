@@ -29,38 +29,97 @@ object WebServer {
   def main(args: Array[String]) {
 
     val route: Route =
-      get {
-        pathPrefix("item" / LongNumber) { id =>
-          // there might be no item for a given id
-          val maybeItem: Option[Item] = fetchItem(id)
-          maybeItem match {
-            case Some(item) => complete(item)
-            case None
-            => complete(StatusCodes.NotFound)
-          }
-        }
-
-        pathPrefix("totaltips"/ LongNumber){ id =>
-          // there might be no item for a given id
-          val maybeItem: Option[Item] = fetchItem(id)
-          maybeItem match {
-            case Some(item) => complete(item)
-            case None
-            => complete(StatusCodes.NotFound)
-          }
-        }
-      } ~
-        post {
-          path("create-order") {
-            entity(as[Order]) { order =>
-              val saved: Done = saveOrder(order)
-              saved match {
-                case Done => complete("order created")
-                case _ => complete(StatusCodes.NotFound)
-              }
+      pathPrefix("tips") {
+        get {
+          path("listedonors" / LongNumber) { id =>
+            // there might be no item for a given id
+            val maybeItem: Option[Item] = fetchItembById(id)
+            maybeItem match {
+              case Some(item) => complete(item)
+              case None => complete(StatusCodes.NotFound)
             }
           }
         }
+        post {
+          path("makeTip") {
+
+          }
+        }
+        post {
+          path("cancelTip") {
+
+          }
+        }
+        get {
+          path("sumAllTips") {
+
+          }
+        }
+        get {
+          path("getAllTipsByUser" / LongNumber) {
+
+          }
+        }
+      }
+    pathPrefix("sub"/ LongNumber){ id =>
+      // there might be no item for a given id
+      val maybeItem: Option[Item] = fetchItembById(id)
+      maybeItem match {
+        case Some(item) => complete(item)
+        case None
+        => complete(StatusCodes.NotFound)
+      }
+    }
+    pathPrefix("giveaways") {
+      post {
+        path("createGiveAway" / LongNumber) {
+
+        }
+      }
+      post {
+        path ("RegisterToGiveAway" / LongNumber) {
+
+        }
+      }
+      get {
+        path("getWinner") {
+
+        }
+      }
+    }
+    pathPrefix("survey") {
+      post("createSurvey" / Survey) {
+
+      }
+      post ("doSurvey") {
+
+      }
+      get("getSurveyResult" / LongNumber) {
+
+      }
+    }
+    get {
+      pathPrefix("item" / LongNumber) { id =>
+        // there might be no item for a given id
+        val maybeItem: Option[Item] = fetchItembById(id)
+        maybeItem match {
+          case Some(item) => complete(item)
+          case None
+          => complete(StatusCodes.NotFound)
+        }
+      }
+    } ~
+      post {
+        path("create-order") {
+          entity(as[Order]) { order =>
+            val saved: Done = saveOrder(order)
+            saved match {
+              case Done => complete("order created")
+              case _ => complete(StatusCodes.NotFound)
+            }
+          }
+        }
+      }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
