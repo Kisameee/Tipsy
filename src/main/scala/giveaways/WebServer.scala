@@ -40,8 +40,14 @@ object WebServer {
           }
         }
 
-        pathPrefix("item"/ LongNumber){
-
+        pathPrefix("totaltips"/ LongNumber){ id =>
+          // there might be no item for a given id
+          val maybeItem: Option[Item] = fetchItem(id)
+          maybeItem match {
+            case Some(item) => complete(item)
+            case None
+            => complete(StatusCodes.NotFound)
+          }
         }
       } ~
         post {
